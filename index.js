@@ -1,35 +1,14 @@
+const arr1 = ['a', 'b', 'c']
+const arr2 = [...arr1, 'foo']
 
-class B {
+class A {
   constructor() {
-    console.log('B class')
+    this.aa = 123
   }
 }
-class A extends B{
+class B extends A{
   constructor() {
     super()
-    console.log('A class')
+    this.bb = 456
   }
 }
-const a = new A()
-const b = new B()
-
-const obj1 = {
-  a: 1,
-  b: 2
-}
-
-const obj2 = {
-  c: 3,
-  d: 4
-}
-
-const obj = {
-  ...obj1,
-  ...obj2
-}
-console.log(obj)
-
-module.exports = A
-
-// console.log(config)
-// module.exports = config

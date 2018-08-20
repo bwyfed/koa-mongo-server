@@ -5,12 +5,12 @@
       {
         "targets": {
           "node": "current"
-        },
-        "include": ["transform-es2015-spread"]
+        }
       }
     ]
   ],
   "plugins": [
-    "transform-es2015-spread"
+    "transform-es2015-spread",
+    "transform-es2015-classes"
   ]
 }

@@ -6,6 +6,7 @@
     "start": "node server.js",
     "dev": "supervisor server.js",
     "test": "babel-node index.js",
+    "test2": "babel index.js",
     "prod:sit": "cross-env NODE_ENV=production node server.js",
     "prod:online": "cross-env NODE_ENV=production pm2 start server.js"
   },
@@ -25,7 +26,6 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
     "babel-eslint": "7.1.1",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
