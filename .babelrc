@@ -10,7 +10,6 @@
     ]
   ],
   "plugins": [
-    "transform-es2015-spread",
-    "transform-es2015-classes"
+    "transform-object-rest-spread"
   ]
 }

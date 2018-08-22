@@ -6,13 +6,16 @@ const co = require('co')
 const convert = require('koa-convert')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
+const bodyParser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const debug = require('debug')('koa2:server')
+// 认证鉴权相关
+const session = require('koa-session')
+const passport = require('koa-passport')
+
 const path = require('path')
 
 const config = require('./index')
-const port = process.env.PORT || config.port
 
 // Define the Koa configuration method
 module.exports = function() {
@@ -23,8 +26,10 @@ module.exports = function() {
   // error handler
   onerror(app)
 
+  // sessions
+  app.keys = [config.sessionSecret]
   // middlewares
-  app.use(bodyparser())
+  app.use(bodyParser()) // body parser
   .use(json())
   .use(logger())
   .use(require('koa-static')(path.join(__dirname, '../public')))
@@ -33,6 +38,17 @@ module.exports = function() {
     map: {'pug': 'pug'},
     extension: 'pug'
   }))
+  .use(session({
+    saveUninitialized: true,
+		resave: true,
+		secret: config.sessionSecret
+  }, app)) // sessions
+  .use(passport.initialize()) // authentication init
+  .use(passport.session({
+    saveUninitialized: true,
+    resave: true,
+    secret: config.sessionSecret
+  })) // authentication session
   .use(router.routes())
   .use(router.allowedMethods())
 
@@ -45,7 +61,7 @@ module.exports = function() {
   })
   // Load the routing files
   require('../app/routes/index.server.routes')(router)
-  require('../app/routes/user.server.routes')(router)
+  require('../app/routes/users.server.routes')(router)
 
   app.on('error', function(err, ctx) {
     console.log(err)
