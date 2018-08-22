@@ -27,10 +27,13 @@ module.exports =  (router) => {
   // }))
 
   router.get('/success', async function (ctx, next) {
-    ctx.state = {
-      title: 'koa2 title success'
-    };
-    await ctx.render('success', {title: ctx.state});
+    if (ctx.isAuthenticated()) {
+      ctx.state = {
+        title: 'koa2 title success'
+      };
+      await ctx.render('success', {title: ctx.state});
+    }
+    
   })
 
   router.get('/fail', async function (ctx, next) {

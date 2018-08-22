@@ -20,7 +20,7 @@ module.exports =  (router) => {
     })(ctx)
   })
   
-  router.post('/login',
+  router.post('/signin',
     passport.authenticate('local', {
       successRedirect: '/app',
       failureRedirect: '/'
@@ -39,8 +39,12 @@ module.exports =  (router) => {
   
   router.get('/app', async (ctx) => {
     if (ctx.isAuthenticated()) {
-      ctx.type = 'html';
-      ctx.body = fs.createReadStream(path.resolve(__dirname,'../../views/app.html'));
+      // ctx.type = 'html';
+      // ctx.body = fs.createReadStream(path.resolve(__dirname,'../../views/app.html'));
+      ctx.state = {
+        title: 'koa2 title success'
+      };
+      await ctx.render('success', {title: ctx.state});
     } else {
       ctx.body = { success: false };
       ctx.throw(401);

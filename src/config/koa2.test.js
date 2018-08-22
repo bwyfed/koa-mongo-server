@@ -39,8 +39,8 @@ module.exports = () => {
   const passport = Passport(app)
 
   // Load the routing files
-  // app.use(require('../app/routes/routes.test')(router).routes())
-  app.use(require('../app/routes/index.server.routes')(router).routes())
+  app.use(require('../app/routes/routes.test')(router).routes())
+  // app.use(require('../app/routes/index.server.routes')(router).routes())
   // app.use(require('../app/routes/users.server.routes')(router).routes())
   // Return the Koa application instance
   return app
