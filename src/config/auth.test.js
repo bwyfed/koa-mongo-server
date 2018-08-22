@@ -17,6 +17,7 @@ passport.deserializeUser(async (id, done) => {
 	console.log(`deserializeUser, id=${id}, this=${this}`)
   try {
     const user = await fetchUser();
+    console.log(user)
     done(null, user);
   } catch(err) {
     done(err);

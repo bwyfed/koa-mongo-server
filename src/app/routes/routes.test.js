@@ -1,11 +1,36 @@
 const passport = require('koa-passport');
 const fs = require('fs');
 const path = require('path')
+const users = require('../controllers/users.server.controller')
 
 module.exports =  (router) => {
-  router.get('/', async (ctx) => {
-    ctx.type = 'html';
-    ctx.body = fs.createReadStream(path.resolve(__dirname,'../../views/login.html'));
+  // router.get('/', async (ctx) => {
+  //   ctx.type = 'html';
+  //   ctx.body = fs.createReadStream(path.resolve(__dirname,'../../views/login.html'));
+  // })
+
+  router.get('/',async (ctx, next) => {
+    // If user is not connected render the signin page, otherwise redirect the user back to the main appliaction page
+    ctx.state = {
+      title: 'Sign-in Page'
+    }
+    // render the signin page
+    ctx.type = 'html'
+    await ctx.render('signin', ctx.state)
+  })
+
+  router.get('/success', async function (ctx, next) {
+      ctx.state = {
+        title: 'koa2 title success'
+      };
+      await ctx.render('success', {title: ctx.state});
+  })
+
+  router.get('/fail', async function (ctx, next) {
+    ctx.state = {
+      title: 'koa2 title fail'
+    };
+    await ctx.render('fail', {title: ctx.state});
   })
   
   router.post('/custom', async (ctx) => {
@@ -22,8 +47,8 @@ module.exports =  (router) => {
   
   router.post('/signin',
     passport.authenticate('local', {
-      successRedirect: '/app',
-      failureRedirect: '/'
+      successRedirect: '/success',
+      failureRedirect: '/fail'
     })
   )
   
