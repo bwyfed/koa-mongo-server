@@ -19,8 +19,9 @@ module.exports =  (router) => {
   // )
   // 测试登录
   router.post('/signin', passport.authenticate('local', {
-          successRedirect: '/signup',
-          failureRedirect: '/welcome'
+          session: false,
+          successRedirect: '/success',
+          failureRedirect: '/fail'
         }))
   // Set up the 'signout' route
   router.get('/signout', users.signout)

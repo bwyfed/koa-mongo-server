@@ -22,6 +22,7 @@ exports.createLocalStrategy = (passport) => {
   // Use the Passport's Local strategy
   console.log('create local strategy')
   passport.use(new LocalStrategy((username, password, done) => {
+    console.log('invoke local strategy')
     fetchUserInfo()
     .then(user => {
       console.log('compare username and password')
