@@ -4,10 +4,13 @@ block content
   .main-container
     if username
       .is-login 已经登录
-      h3 Hello #{username}
-      a(href="/signout") Sign out
+        h3 Hello #{username}
+        a(href="/signout") Sign out
     else
       .no-login 未登录
-      a(href="/signup") Signup
-      br
-      a(href="/signin") Signin
+        .sigup
+          a(href="/signup") Signup
+        .sigin
+          a(href="/signin") Signin
+    .access-count
+      span access count:#{count}

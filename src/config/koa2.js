@@ -1,9 +1,8 @@
 // Load the module dependencies
+const path = require('path')
 const Koa = require('koa')
 const Router = require('koa-router')
 const views = require('koa-views')
-const co = require('co')
-const convert = require('koa-convert')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyParser = require('koa-bodyparser')
@@ -12,9 +11,7 @@ const debug = require('debug')('koa2:server')
 // 认证鉴权相关
 const session = require('koa-session')
 const passport = require('koa-passport')
-
-const path = require('path')
-
+// 基础配置
 const config = require('./index')
 
 // Define the Koa configuration method
@@ -23,34 +20,40 @@ module.exports = function() {
   const app = new Koa()
   // Create a new Router instance
   const router = new Router()
+
   // error handler
   onerror(app)
-
+  // middlewares setup
+  // Development style logger
+  app.use(logger())
   // sessions
   app.keys = [config.sessionSecret]
-  // middlewares
-  app.use(bodyParser()) // body parser
-  .use(json())
-  .use(logger())
-  .use(require('koa-static')(path.join(__dirname, '../public')))
-  .use(views(path.join(__dirname, '../app/views'), {
+  app.use(session({
+    key: 'npo:sess',
+    maxAge: 1*60*1000 // 1 mininute
+  }, app))
+  // body parser
+  app.use(bodyParser()) 
+  // JSON pretty-printed response
+  app.use(json())
+  // Configure static file serving
+  app.use(require('koa-static')(path.join(__dirname, '../public')))
+  // Set the application view engine and 'views' folder
+  app.use(views(path.join(__dirname, '../app/views'), {
     options: {settings: {views: path.join(__dirname, '../app/views')}},
     map: {'pug': 'pug'},
     extension: 'pug'
   }))
-  .use(session({
-    saveUninitialized: true,
-		resave: true,
-		secret: config.sessionSecret
-  }, app)) // sessions
-  .use(passport.initialize()) // authentication init
-  .use(passport.session({
+  // Configure the Passport middleware
+  app.use(passport.initialize()) // authentication init
+  app.use(passport.session({
     saveUninitialized: true,
     resave: true,
     secret: config.sessionSecret
-  })) // authentication session
-  .use(router.routes())
-  .use(router.allowedMethods())
+  }))
+  // Configure router middleware
+  app.use(router.routes())
+  app.use(router.allowedMethods())
 
   // logger
   app.use(async (ctx, next) => {
@@ -62,8 +65,8 @@ module.exports = function() {
   // Load the routing files
   require('../app/routes/index.server.routes')(router)
   require('../app/routes/users.server.routes')(router)
-
-  app.on('error', function(err, ctx) {
+  // Error handling
+  app.on('error', (err, ctx) => {
     console.log(err)
     logger.error('server error', err, ctx)
   })

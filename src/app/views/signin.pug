@@ -1,12 +1,21 @@
 extends layout
 
 block content
+  form(action="/signin", method="post")
+    .username
+      label Username:
+      input(type="text", name="username", value="test1")
+    .password
+      label Password:
+      input(type="password", name="password", value="111111")
+    .submit
+      button(type="submit") Login
   form(action="/custom", method="post")
     .username
       label Username:
-      input(type="text", name="username", value="test")
+      input(type="text", name="username", value="test2")
     .password
       label Password:
-      input(type="password", name="password", value="test")
+      input(type="password", name="password", value="222222")
     .submit
-      button(type="submit") Login
+      button(type="submit") Custom Login

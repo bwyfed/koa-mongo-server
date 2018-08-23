@@ -9,11 +9,14 @@ module.exports = function() {
 
   // Use Passport's 'serializeUser' method to serialize the user id
   passport.serializeUser((user, done) => {
+    console.log(`serializeUser,user:`)
+    console.log(user)
     done(null, user.id)
   })
 
   // Use Passport's 'deserializeUser' method to load the user document
   passport.deserializeUser((id, done) => {
+    console.log(`deserializeUser,id:${id}`)
     try {
       User.findOne({
         _id: id
