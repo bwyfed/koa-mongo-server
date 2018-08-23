@@ -34,11 +34,17 @@ module.exports =  (router) => {
   })
   
   router.post('/custom', async (ctx) => {
+    console.log(`/custom, ctx.request.body=`)
+    console.log(ctx.request.body)
     return passport.authenticate('local', (err, user, info, status) => {
+      console.log(`err:${err}, info:${info}, status:${status}, user:, `)
+      console.log(ctx.request.body)
       if (user === false) {
+        console.log('auth fail')
         ctx.body = { success: false };
         ctx.throw(401);
       } else {
+        console.log('auth success')
         ctx.body = { success: true };
         return ctx.login(user)
       }
