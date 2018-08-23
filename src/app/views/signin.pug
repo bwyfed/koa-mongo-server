@@ -10,12 +10,9 @@ block content
       input(type="password", name="password", value="111111")
     .submit
       button(type="submit") Login
-  form(action="/custom", method="post")
-    .username
-      label Username:
-      input(type="text", name="username", value="test2")
+  form(action="/micro", method="post")
     .password
-      label Password:
-      input(type="password", name="password", value="222222")
+      label MicroPassword:
+      input(type="password", placehold="请输入微令" name="password", value="222222")
     .submit
-      button(type="submit") Custom Login
+      button(type="submit") Micro Login

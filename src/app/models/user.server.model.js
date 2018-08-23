@@ -69,6 +69,12 @@ UserSchema.methods.authenticate = function (password) {
   return this.password === this.hashPassord(password)
 }
 
+// Create an instance method for authenticating micro code
+UserSchema.methods.authMicrocode = function (microCode) {
+  // test for micro code
+  return true
+}
+
 // Configure to 'UserSchema' to user getters and virtuals when transforming to JSON
 UserSchema.set('toJSON', {
   getters: true
