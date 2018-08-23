@@ -33,7 +33,8 @@ const getErrorMessage = err => {
 // Create a new controller method that renders the signin page
 exports.renderSignin = async (ctx, next) => {
   // If user is not connected render the signin page, otherwise redirect the user back to the main appliaction page
-  if (!ctx.req.user) {
+  console.log(`render signin,ctx.isUnauthenticated():${ctx.isUnauthenticated()}`)
+  if (ctx.isUnauthenticated()) {
     ctx.state = {
       title: 'Sign-in Page'
     }
@@ -96,7 +97,8 @@ exports.signintest = async (ctx, next) => {
 // Create a new controller method that renders the signup page
 exports.renderSignup = async (ctx, next) => {
   // If user is not connected render the signup page, otherwise redirect the user back to the main application page
-  if (!ctx.req.user) {
+  console.log(`render signup,ctx.isUnauthenticated():${ctx.isUnauthenticated()}`)
+  if (ctx.isUnauthenticated()) {
     ctx.state = {
       title: 'Sign-up Page'
     }
@@ -109,9 +111,9 @@ exports.renderSignup = async (ctx, next) => {
 // Create a new controller method that creates new 'regular' users
 exports.signup = async (ctx, next) => {
   // If user is not connected, create and login a new user, otherwise redirect the user back to the main application page
-  console.log('ctx.request.user',ctx.request.user)
-  if (!ctx.request.user) {
-    console.log('ctx.request.body',ctx.request.body)
+  console.log(`signup,ctx.isUnauthenticated():${ctx.isUnauthenticated()}`)
+  if (ctx.isUnauthenticated()) {
+    console.log('new user model, ctx.request.body',ctx.request.body)
     // Create a new 'User' model instance
     const user = new User(ctx.request.body)
     let message
@@ -120,9 +122,18 @@ exports.signup = async (ctx, next) => {
     // Try saving the new user document
     console.log('before user.save')
     await user.save()
-      .then(doc => {
-          // If the user was created successfully, redirect to signin page to login
-          ctx.redirect('/signin')
+      .then(
+        async doc => {
+          // If the user was created successfully, use the Passport 'login' method to login
+          console.log('call ctx.login')
+          await ctx.login(user)
+                  .then(()=>{
+                    //Redirect the user back to the main application page
+                    console.log('login success')
+                    ctx.redirect('/')
+                  })
+                  .catch(err => next(err))
+          
         },
       )
       .catch(err => {
@@ -140,6 +151,7 @@ exports.signup = async (ctx, next) => {
 
 // Create a new controller method for signing out
 exports.signout = (ctx) => {
+  console.log('signout')
   // Use the Passport 'logout' method to logout
   ctx.logout()
   // Redirect the user back to the main application page

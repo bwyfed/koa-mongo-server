@@ -17,11 +17,10 @@ module.exports =  (router) => {
   //   })(ctx)
   // }
   // )
-  // 测试登录
+  // 测试普通登录
   router.post('/signin', passport.authenticate('local', {
-          session: false,
-          successRedirect: '/success',
-          failureRedirect: '/fail'
+          successRedirect: '/',
+          failureRedirect: '/signin'
         }))
   // Set up the 'signout' route
   router.get('/signout', users.signout)
