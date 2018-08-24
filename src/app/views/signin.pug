@@ -16,3 +16,45 @@ block content
       input(type="password", placehold="请输入微令" name="password", value="222222")
     .submit
       button(type="submit") Micro Login
+  form(action="/tokenLogin", method="post", id="tokenLoginForm")
+    .username
+      label Username:
+      input(type="text", id="username", name="username", value="test1")
+    .password
+      label Password:
+      input(type="password", id="password", name="password", value="111111")
+    .submit
+      button(type="submit") Token Login
+  script.
+    const tokenLoginForm = document.getElementById('tokenLoginForm')
+    console.log(tokenLoginForm)
+    tokenLoginForm.onsubmit = (e) => {
+      console.log(e)
+      const form = e.target
+      e.preventDefault()
+      const xhr = new XMLHttpRequest()
+      xhr.addEventListener("load", ()=>{console.log(this.responseText)})
+      xhr.open("POST", "/tokenLogin")
+      xhr.send(JSON.stringify({username: 'test1', password: '111111'}))
+    }
+  form(action="/needToken", method="post", id="tokenForm")
+    .username
+      label Username:
+      input(type="text", name="username", value="tokenname")
+    .password
+      label Password:
+      input(type="password", name="password", value="tokencode")
+    .submit
+      button(type="submit") needToken
+  script.
+    const tokenForm = document.getElementById('tokenForm')
+    console.log(tokenForm)
+    tokenForm.onsubmit = (e) => {
+      console.log(e)
+      const form = e.target
+      e.preventDefault()
+      const xhr = new XMLHttpRequest()
+      xhr.addEventListener("load", ()=>{console.log(this.responseText)})
+      xhr.open("POST", "/needToken")
+      xhr.send(JSON.stringify({username: form.username, password: form.username}))
+    }

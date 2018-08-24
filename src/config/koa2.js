@@ -11,8 +11,10 @@ const debug = require('debug')('koa2:server')
 // 认证鉴权相关
 const session = require('koa-session')
 const passport = require('koa-passport')
+const jwt = require('koa-jwt')
 // 基础配置
 const config = require('./index')
+const ErrorRoutesCatch = require('../app/middleware/ErrorRoutesCatch')
 
 // Define the Koa configuration method
 module.exports = function() {
@@ -21,6 +23,8 @@ module.exports = function() {
   // Create a new Router instance
   const router = new Router()
 
+  // 401 handler
+  // app.use(ErrorRoutesCatch())
   // error handler
   onerror(app)
   // middlewares setup
@@ -46,7 +50,12 @@ module.exports = function() {
   }))
   // Configure the Passport middleware
   app.use(passport.initialize()) // authentication init
-  app.use(passport.session())
+  // app.use(passport.session())
+  // Cofigure the jwt middleware
+  app.use(
+    jwt({ secret: 'shared-secret', debug: true })
+    .unless({path: [/^\/sign/, /^\/tokenLogin/,/^\/favicon.ico/]})
+  )
   // Configure router middleware
   app.use(router.routes())
   app.use(router.allowedMethods())
@@ -64,7 +73,7 @@ module.exports = function() {
   // Error handling
   app.on('error', (err, ctx) => {
     console.log(err)
-    logger.error('server error', err, ctx)
+    console.error('server error', err, ctx)
   })
 
   // Return the Koa application instance
