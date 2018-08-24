@@ -1,6 +1,7 @@
 
 // Load the module dependencies
 const User = require('mongoose').model('User')
+const MicroCode = require('mongoose').model('MicroCode')
 
 // Create a new error handling controller method
 const getErrorMessage = err => {
@@ -91,6 +92,47 @@ exports.signintest = async (ctx, next) => {
 
 
   }))
+  
+}
+
+// Create a mirco code signin controller
+exports.microsignin = async (ctx, next) => {
+  console.log('/microSign, start passport.authenticate')
+  console.log(ctx.request.body)
+  if (ctx.request.body && ctx.request.body.password) {
+    const code = ctx.request.body.password
+    const query = MicroCode.findOne({code})
+    await query.exec()
+    .then((res)=>{
+      console.log('findOne,doc:'+res)
+      if(null === res) {
+        // 数据库中不存在此文档，则需新建一个文档并插入
+        return new MicroCode({code, token:'new'})
+      } else {
+        // 否则会返回成功
+        ctx.body = {result: true}
+        return false
+      }
+    })
+    .then((newDoc) => {
+      console.log('newDoc')
+      console.log(newDoc)
+      if(newDoc) {
+        return newDoc.save()
+      }
+      return false
+    })
+    .then((saveDoc) => {
+      if(saveDoc) {
+        console.log('save success')
+        ctx.body = {success: true}
+      }
+    })
+    .catch (err => console.log(err))
+  } else {
+    console.log('no password pass')
+    ctx.redirect('/signin')
+  }
   
 }
 

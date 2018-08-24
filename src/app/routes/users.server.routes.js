@@ -16,19 +16,7 @@ module.exports =  (router) => {
           successRedirect: '/',
           failureRedirect: '/signin'
         }))
-  router.post('/micro', async (ctx) => {
-    console.log('/mirco, start passport.authenticate')
-    return passport.authenticate('local', (err, user, info, status) => {
-      console.log(`passport.authenticate callback. err:${err}, user:${user}, info:${info}, status:${status}`)
-      if (user === false) {
-        ctx.body = { success: false }
-        ctx.throw(401) //401 "unauthorized"
-      } else {
-        ctx.body = { success: true }
-        return ctx.login()
-      }
-    })(ctx)
-  })
+  router.post('/microSign', users.microsignin)
   // Set up the 'signout' route
   router.get('/signout', users.signout)
 

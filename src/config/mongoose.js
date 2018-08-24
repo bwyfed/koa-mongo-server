@@ -14,8 +14,8 @@ module.exports = function () {
   const db = mongoose.connect(config.db, options)
 
   // Load the application models
-  // Load the 'User' model
   require('../app/models/user.server.model')
+  require('../app/models/microcode.server.model')
 
   // Return the Mongoose connection instance
   return db

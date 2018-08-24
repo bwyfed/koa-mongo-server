@@ -46,11 +46,7 @@ module.exports = function() {
   }))
   // Configure the Passport middleware
   app.use(passport.initialize()) // authentication init
-  app.use(passport.session({
-    saveUninitialized: true,
-    resave: true,
-    secret: config.sessionSecret
-  }))
+  app.use(passport.session())
   // Configure router middleware
   app.use(router.routes())
   app.use(router.allowedMethods())
