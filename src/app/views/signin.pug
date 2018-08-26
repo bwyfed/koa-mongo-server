@@ -27,15 +27,15 @@ block content
       button(type="submit") Token Login
   script.
     const tokenLoginForm = document.getElementById('tokenLoginForm')
-    console.log(tokenLoginForm)
     tokenLoginForm.onsubmit = (e) => {
-      console.log(e)
       const form = e.target
       e.preventDefault()
       const xhr = new XMLHttpRequest()
       xhr.addEventListener("load", ()=>{console.log(this.responseText)})
       xhr.open("POST", "/tokenLogin")
-      xhr.send(JSON.stringify({username: 'test1', password: '111111'}))
+      xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded")
+      //这里应该使用表单编码
+      xhr.send(`username=${tokenLoginForm.username.value}&password=${tokenLoginForm.password.value}`)
     }
   form(action="/needToken", method="post", id="tokenForm")
     .username

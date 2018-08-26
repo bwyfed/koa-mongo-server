@@ -8,7 +8,7 @@ const fetchUserInfo = (username) => {
   // Fetch data from remote server
 
   // Update the mongodb
-
+  console.log('fetchUserInfo')
   // Mock data
   const user = {id: 1, username: 'test', password: 'test'}
 

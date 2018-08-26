@@ -21,15 +21,23 @@ module.exports =  (router) => {
   router.get('/signout', users.signout)
 
   // Test passport with jwt
+  router.get('/tokenLogin', (ctx, next) => {
+    ctx.body = {fuck: 'you'}
+  })
+  // router.post('/tokenLogin', (ctx, next) => {
+  //   ctx.body = {fuck: 'shabi'}
+  // })
+
   router.post('/tokenLogin', (ctx, next) => {
-    console.log('/tokenLogin')
+    console.log('/tokenLogin handler')
     return passport.authenticate('local', (err, user, info) => {
-      console.log(`err:${err},user:${user},info:${info}`)
+      console.log(`authenticate callback,err:${err},user:${user},info:`);console.log(info)
       if (user === false) {
+        console.log('auth failed')
         ctx.status = 401
         ctx.body = info.message
       } else {
-        // generate token
+        // generate token ...
 
         try {
           ctx.body = {
@@ -40,8 +48,9 @@ module.exports =  (router) => {
           ctx.throw(500, e)
         }
       }
-    })
+    })(ctx, next)
   })
+
   router.post('/needToken', ctx => {
     ctx.body = ctx.state.user
   })

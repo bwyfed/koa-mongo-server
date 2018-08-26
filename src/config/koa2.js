@@ -37,7 +37,7 @@ module.exports = function() {
     maxAge: 1*60*1000 // 1 mininute
   }, app))
   // body parser
-  app.use(bodyParser()) 
+  app.use(bodyParser())
   // JSON pretty-printed response
   app.use(json())
   // Configure static file serving
@@ -54,7 +54,7 @@ module.exports = function() {
   // Cofigure the jwt middleware
   app.use(
     jwt({ secret: 'shared-secret', debug: true })
-    .unless({path: [/^\/sign/, /^\/tokenLogin/,/^\/favicon.ico/]})
+    .unless({path: [/^\/sign/, /^\/token/,/^\/favicon.ico/]})
   )
   // Configure router middleware
   app.use(router.routes())
