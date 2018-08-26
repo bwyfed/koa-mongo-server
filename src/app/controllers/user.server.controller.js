@@ -2,6 +2,8 @@
 const passport = require('koa-passport')
 const jsonwebtoken = require('jsonwebtoken')
 const jwtSecret = require('../../config').jwtSecret
+const mongoose = require('mongoose')
+const User = mongoose.model('User')
 
 class UserController {
   static async login (ctx, next) {
@@ -42,10 +44,46 @@ class UserController {
 
   static async register (ctx) {
     const { body } = ctx.request
-
-    ctx.body = {
-      route: 'from controller, /native-api/user/register'
+    if (!body.username || !body.password) {
+      ctx.status = 400
+      ctx.body = {
+        code: '10002',
+        msg: `expected an object with username, password but got: ${body}`
+      }
+      return
     }
+    // 请求微服务，入库
+    // ...
+    try {
+      // 查询数据库是否已有用户
+      let user = await User.find({username: body.username})
+      console.log('User.find')
+      console.log(user)
+      if (!user.length) { // 新用户
+        // const newUser = await User.create(body)
+        const newUser = new User(body)
+        // Set the user provider property
+        newUser.provider = 'local'
+        console.log('new User(body)')
+        console.log(newUser)
+
+        user = await newUser.save()
+        ctx.status = 200
+        ctx.body = {
+          code: '10000',
+          msg: 'register success'
+        }
+      } else {
+        ctx.status = 406
+        ctx.body = {
+          code: '10003',
+          msg: 'user has exist'
+        }
+      }
+    } catch (err) {
+      ctx.throw(500)
+    }
+    
   }
 }
 
