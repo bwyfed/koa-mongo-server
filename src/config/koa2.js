@@ -24,7 +24,7 @@ module.exports = function() {
   // const router = new Router()
 
   // 401 handler
-  // app.use(ErrorRoutesCatch())
+  app.use(ErrorRoutesCatch())
   // error handler
   onerror(app)
   // middlewares setup

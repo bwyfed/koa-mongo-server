@@ -39,7 +39,6 @@ class UserController {
         }
       }
     })(ctx, next)
-
   }
 
   static async register (ctx) {

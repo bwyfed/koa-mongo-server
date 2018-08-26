@@ -30,6 +30,7 @@ module.exports = function() {
 
   // Load Passport's strategies configuration files
   require('./strategies/local')()
+  require('./strategies/jwt')()
 
   // register Passport on Koa Application instance
 
