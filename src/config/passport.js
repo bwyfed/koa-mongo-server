@@ -29,7 +29,7 @@ module.exports = function() {
   })
 
   // Load Passport's strategies configuration files
-  require('./strategies/local')['createLocalStrategy'](passport)
+  require('./strategies/local')()
 
   // register Passport on Koa Application instance
 

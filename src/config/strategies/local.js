@@ -1,20 +1,21 @@
 // Load the module dependencies
+const passport = require('koa-passport')
 const LocalStrategy = require('passport-local').Strategy
 // Get User model
 const User = require('mongoose').model('User')
 
 // fetch user info
-const fetchUserInfo = (username) => {
+const fetchUserInfo = async (username) => {
   // Fetch data from remote server
 
   // Update the mongodb
   console.log('fetchUserInfo')
   // Mock data
-  const user = {id: 1, username: 'test', password: 'test'}
+  // const user = {id: 1, username: 'test', password: 'test'}
 
   // Get data from mongodb
-  const query = User.findOne({username})
-  return query.exec()
+  const user = await User.findOne({username})
+  return user
 }
 // Create the Local strategy configuration method
 exports.createLocalStrategy = (passport) => {
@@ -45,4 +46,31 @@ exports.createLocalStrategy = (passport) => {
     })
     .catch((err) => ( done(err) ))
   }))
+}
+
+module.exports = () => {
+  passport.use(new LocalStrategy({
+    usernameField: 'username',
+    passwordField: 'password',
+    session: false
+  },
+  async (username, password, done) => {
+    console.log('local strategy')
+    console.log(username, password)
+    const user = await fetchUserInfo(username)
+    if (!user) {
+      return done(null, false, {
+        message: 'Unknown user'
+      })
+    }
+    // call User model method authenticate to verify password
+    if (!user.authenticate(password)) {
+      return done(null, false, {
+        message: 'Invalid password'
+      })
+    }
+    // auth success
+    return done(null, user)
+  }
+))
 }
