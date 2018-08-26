@@ -21,7 +21,7 @@ module.exports = function() {
   // Create a new Koa application instance
   const app = new Koa()
   // Create a new Router instance
-  const router = new Router()
+  // const router = new Router()
 
   // 401 handler
   // app.use(ErrorRoutesCatch())
@@ -52,13 +52,13 @@ module.exports = function() {
   app.use(passport.initialize()) // authentication init
   // app.use(passport.session())
   // Cofigure the jwt middleware
-  app.use(
-    jwt({ secret: 'shared-secret', debug: true })
-    .unless({path: [/^\/sign/, /^\/token/,/^\/favicon.ico/]})
-  )
+  // app.use(
+  //   jwt({ secret: 'shared-secret', debug: true })
+  //   .unless({path: [/^\/sign/, /^\/token/,/^\/favicon.ico/]})
+  // )
   // Configure router middleware
-  app.use(router.routes())
-  app.use(router.allowedMethods())
+  // app.use(router.routes())
+  // app.use(router.allowedMethods())
 
   // logger
   app.use(async (ctx, next) => {
@@ -68,8 +68,11 @@ module.exports = function() {
     console.log(`${ctx.method} ${ctx.url} - $ms`)
   })
   // Load the routing files
-  require('../app/routes/index.server.routes')(router)
-  require('../app/routes/users.server.routes')(router)
+  // require('../app/routes/index.server.routes')(router)
+  // require('../app/routes/users.server.routes')(router)
+  // 为web端和native端提供的路由配置 /web-api和/native-api
+  require('../app/routes/api.web.server.routes')(app)
+  require('../app/routes/api.native.server.routes')(app)
   // Error handling
   app.on('error', (err, ctx) => {
     console.log(err)
